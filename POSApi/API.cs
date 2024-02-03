@@ -8,7 +8,8 @@ public static class API
     {
         // Mapping Endpoint of API // Get, Post , Put ,Delete Base URL then Endpoint
         app.MapGet(pattern: "/GetAllProduct",GetAllProduct);
-        app.MapPost(pattern: "/GetProductDetailsById", GetProductDetailsById);
+        app.MapGet(pattern: "/GetProductDetailsById/{Id}", GetProductDetailsById);
+        app.MapGet(pattern: "/GetProductDetailsByName/{Name}", GetProductDetailsByName);
     }
     private static async Task<IResult> GetAllProduct(IProductData productData)
     {
@@ -31,6 +32,18 @@ public static class API
             return Results.Ok(await productData.GetProductDetailById(Id));
         }
         catch(Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
+    }
+
+    private static async Task<IResult> GetProductDetailsByName(IProductData productData, string name)
+    {
+        try
+        {
+            return Results.Ok(await productData.GetProductDetailByName(name));
+        }
+        catch (Exception ex)
         {
             return Results.Problem(ex.Message);
         }
